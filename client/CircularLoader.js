@@ -1,6 +1,9 @@
 class Loader {
-    constructor(blockingMethod) {
-        this.blockingMethod = blockingMethod
+    constructor(url,respType,cb,errcb) {
+        this.url = url
+        this.respType = respType
+        this.cb = cb
+        this.errcb = errcb
 
     }
     startLoading() {
@@ -26,7 +29,21 @@ class Loader {
         const w = window.innerWidth,h = window.innerHeight
         this.circularLoader = new CircularLoader(w/2,h/2,Math.min(w,h)/10)
         document.body.appendChild(this.img)
-        const interval  =  setInterval(()=>{
+        fetch(this.url).then((res)=>{
+            if(this.respType == 'text') {
+                return res.text()
+            }
+            if(this.respType == 'json') {
+                return res.json()
+            }
+        }).then((data)=>{
+            clearInterval(this.interval)
+            document.body.removeChild(this.img)
+            this.cb(data)
+        }).catch((err)=>{
+            this.errcb(err)
+        })
+        this.interval  =  setInterval(()=>{
             this.startLoading()
         },100)
     }
