@@ -1,0 +1,12 @@
+<body>
+    <script src="./client/CircularLoader.js">
+    </script>
+    <script>
+        const loader = new Loader('http://localhost:8080/test','text',(data)=>{
+            console.log(data)
+        },(err)=>{
+            console.log(err)
+        })
+        loader.load()
+    </script>
+</body>
